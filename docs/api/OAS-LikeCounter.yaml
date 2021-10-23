@@ -23,6 +23,9 @@ components:
 paths:
   /articles/{article_id}/likes:
     get:
+      tags:
+        - "Like"
+      operationId: get_like_count
       parameters:
         - in: path
           name: article_id

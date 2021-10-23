@@ -29,6 +29,31 @@
             ]
         },
         {
+            "label": "Generate All",
+            "type": "shell",
+            "command": "echo Finished",
+            "dependsOn": [
+                "Generate Code - Like Api",
+                "Generate Code - Like Counter",
+                "Generate Code - Like Tracker"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Compile OAS Spec - Like Api",
+            "type": "shell",
+            "command": "speccy",
+            "args": [
+                "resolve",
+                "${workspaceFolder}/docs/api/OAS-LikeApi.yaml",
+                "-o",
+                "${workspaceFolder}/docs/api/out/OpenAPI-LikeApi.yaml"
+            ],
+            "problemMatcher": [
+                "$gulp-tsc"
+            ]
+        },
+        {
             "label": "Compile OAS Spec - Like Counter",
             "type": "shell",
             "command": "speccy",
@@ -57,14 +82,17 @@
             ]
         },
         {
-            "label": "Generate Code - Like API",
+            "label": "Generate Code - Like Api",
             "type": "shell",
             "windows": {
                 "command": "${workspaceFolder}/generateCode.ps1",
                 "args": [
-                    "-packageName LikeTrackingSystem.LikeApi",
-                    "-openApiFile out/OpenAPI-LikeApi.yaml"
-                ]
+                    "-packageName","LikeTrackingSystem.LikeApi",
+                    "-openApiFile","out/OpenAPI-LikeApi.yaml"
+                ],
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                }
             },
             "presentation": {
                 "echo": true,
@@ -82,10 +110,14 @@
             "windows": {
                 "command": "${workspaceFolder}/generateCode.ps1",
                 "args": [
-                    "-packageName LikeTrackingSystem.LikeTracker",
-                    "-openApiFile out/OpenAPI-LikeTracker.yaml"
-                ]
+                    "-packageName","LikeTrackingSystem.LikeTracker",
+                    "-openApiFile","out/OpenAPI-LikeTracker.yaml"
+                ],
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                }
             },
+            
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -101,9 +133,12 @@
             "windows": {
                 "command": "${workspaceFolder}/generateCode.ps1",
                 "args": [
-                    "-packageName LikeTrackingSystem.LikeCounter",
-                    "-openApiFile out/OpenAPI-LikeCounter.yaml"
-                ]
+                    "-packageName","LikeTrackingSystem.LikeCounter",
+                    "-openApiFile","out/OpenAPI-LikeCounter.yaml"
+                ],
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                }
             },
             "presentation": {
                 "echo": true,
