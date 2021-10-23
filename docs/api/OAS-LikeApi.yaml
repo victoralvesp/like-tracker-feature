@@ -1,0 +1,50 @@
+openapi: "3.0.2"
+info:
+  title: Like API
+  version: "1.0"
+
+components:
+  schemas:
+    article_id:
+      description: "ID of the article"
+      $ref: "components/schemas.yaml#/components/schemas/article_id"
+    like_info:
+      description: "Information about article likes and current user"
+      type: object
+      properties:
+        like_count:
+          type: integer
+          format: int32
+        user_liked_article:
+          description: "Whether the user liked the article and when"
+          $ref: "components/schemas.yaml#/components/schemas/user_liked_article"
+          
+  responses:
+    not_found:
+      description: "Article not found"
+      $ref: "components/responses.yaml#/components/responses/not_found"
+    invalid_parameters:
+      description: Invalid parameters
+      $ref: "components/responses.yaml#/components/responses/invalid_parameters"
+paths:
+  /articles/{article_id}/likes:
+    get:
+      parameters:
+        - in: path
+          name: article_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/article_id"
+      responses:
+        "200":
+          description: Information found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/like_info"
+        "400":
+          description: Invalid parameters
+          $ref: "#/components/responses/invalid_parameters"
+        "404":
+          description: Not Found
+          $ref: "#/components/responses/not_found"

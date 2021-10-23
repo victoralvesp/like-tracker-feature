@@ -1,0 +1,117 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile All",
+            "type": "shell",
+            "command": "echo Finished",
+            "dependsOn": [
+                "Compile OAS Spec - Like Api",
+                "Compile OAS Spec - Like Counter",
+                "Compile OAS Spec - Like Tracker"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Compile OAS Spec - Like Api",
+            "type": "shell",
+            "command": "speccy",
+            "args": [
+                "resolve",
+                "${workspaceFolder}/docs/api/OAS-LikeApi.yaml",
+                "-o",
+                "${workspaceFolder}/docs/api/out/OpenAPI-LikeApi.yaml"
+            ],
+            "problemMatcher": [
+                "$gulp-tsc"
+            ]
+        },
+        {
+            "label": "Compile OAS Spec - Like Counter",
+            "type": "shell",
+            "command": "speccy",
+            "args": [
+                "resolve",
+                "${workspaceFolder}/docs/api/OAS-LikeCounter.yaml",
+                "-o",
+                "${workspaceFolder}/docs/api/out/OpenAPI-LikeCounter.yaml"
+            ],
+            "problemMatcher": [
+                "$gulp-tsc"
+            ]
+        },
+        {
+            "label": "Compile OAS Spec - Like Tracker",
+            "type": "shell",
+            "command": "speccy",
+            "args": [
+                "resolve",
+                "${workspaceFolder}/docs/api/OAS-LikeTracker.yaml",
+                "-o",
+                "${workspaceFolder}/docs/api/out/OpenAPI-LikeTracker.yaml"
+            ],
+            "problemMatcher": [
+                "$gulp-tsc"
+            ]
+        },
+        {
+            "label": "Generate Code - Like API",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}/generateCode.ps1",
+                "args": [
+                    "--packageName=LikeTrackingSystem.LikeApi",
+                    "--openApiFile=OpenAPI-LikeApi.yaml"
+                ]
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Generate Code - Like Tracker",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}/generateCode.ps1",
+                "args": [
+                    "--packageName=LikeTrackingSystem.LikeTracker",
+                    "--openApiFile=OpenAPI-LikeTracker.yaml"
+                ]
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
+        {
+            "label": "Generate Code - Like Counter",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}/generateCode.ps1",
+                "args": [
+                    "--packageName=LikeTrackingSystem.LikeCounter",
+                    "--openApiFile=OpenAPI-LikeCounter.yaml"
+                ]
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        }
+    ]
+}

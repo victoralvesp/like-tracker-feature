@@ -1,0 +1,16 @@
+components:
+  responses:
+    not_found:
+      description: The resource you were trying to reach is not found
+      content:
+        application/json:
+          schema:
+            $ref: './errors.yaml#/components/schemas/not_found'
+    invalid_parameters:
+      description: The parameters you provided are invalid
+      content:
+        application/json:
+          schema:
+            $ref: './errors.yaml#/components/schemas/invalid_parameters'
+
+      

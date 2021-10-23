@@ -1,0 +1,32 @@
+components:
+  schemas:
+    user_id:
+      type: string
+      format: uuid
+      description: User ID
+      example: 'f0d9e6ac-18d0-4ab0-b379-d96269fb5c20'
+    article_id:
+      type: string
+      description: ID of the article
+      format: uuid
+      example: 'e7c8f0f0-e8e0-4e0e-b8b0-f8f8f8f8f8f8'
+    user_liked_article:
+      description: Whether the user liked the article
+      oneOf:
+        - $ref: '#/components/schemas/user_like_info'
+        - type: boolean
+          example: false
+    user_like_info:
+      type: object
+      description: Information about the when the user liked the article
+      properties:
+        article_id:
+          $ref: '#/components/schemas/article_id'
+        user_id:
+          $ref: '#/components/schemas/user_id'
+        like_date:
+          type: string
+          format: date-time
+          description: Date when the user liked the article
+          example: '2020-01-01T00:00:00Z'
+  

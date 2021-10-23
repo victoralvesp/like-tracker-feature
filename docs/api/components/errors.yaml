@@ -1,0 +1,30 @@
+components:
+  schemas:
+    not_found:
+      type: string
+      description: |
+        The requested resource could not be found.
+    invalid_parameters:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+        type:
+          type: string
+          example: https://tools.ietf.org/html/rfc2616#section-10.4.7
+        title:
+          example: One or more validation errors ocurred.
+        status:
+          type: integer
+          format: int32
+          example: 400
+        traceId:
+          type: string
+          example: "c0a1b2c3d4e5f6a7b8c9d0e1f2"
