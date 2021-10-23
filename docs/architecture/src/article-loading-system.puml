@@ -1,0 +1,40 @@
+@startuml "articleloading"
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/react.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+
+AddElementTag("micro service", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white")
+AddElementTag("storage", $shape=RoundedBoxShape(), $bgColor="lightSkyBlue", $fontColor="white")
+
+SHOW_PERSON_OUTLINE()
+
+Person(customer, User, "A user")
+
+System_Boundary(c1, "Like Tracking") {
+    Container(app, "Web app", "React", "Allows users to like articles via like button", $sprite="react")
+    Container(like_api, "Like API", "C#, ASP.NET 5.0", "Access point for likes ", $tags = "micro service")
+    Container(like_tracker, "Like Tracker", "C#, .NET", "Tracks which users liked an article", $tags = "micro service")
+    Container(like_counter, "Like Counter", "C#, .NET", "Counts ammount of likes for an article", $tags = "micro service")
+    ContainerDb(like_tracking_db, "Like Tracking Database", "MongoDb", "Stores users that liked a given article", $tags = "storage")
+    Container(like_counter_store, "Like Counter Store", "MongoDb, Redis", "Caches and stores the ammount of likes an article has", $tags = "storage")
+}
+
+Rel_D(customer, app, "Request articles", "HTTPS")
+
+
+Rel_U(like_api, app, "Informs like count and user like state", "JSON/HTTPS")
+Rel_D(app, like_api, "Requests article like information", "sync, JSON/HTTPS")
+
+like_api <--> like_counter: Current count [sync, JSON/HTTPS]
+like_api <--> like_tracker: Has user liked this article [sync, JSON/HTTPS]
+
+Rel(like_tracker, like_tracking_db)
+Rel(like_counter, like_counter_store)
+
+
+SHOW_LEGEND()
+@enduml

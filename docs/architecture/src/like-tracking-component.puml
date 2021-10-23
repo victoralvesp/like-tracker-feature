@@ -1,0 +1,44 @@
+@startuml "messagebus"
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/react.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+
+AddElementTag("micro service", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white")
+AddElementTag("storage", $shape=RoundedBoxShape(), $bgColor="lightSkyBlue", $fontColor="white")
+
+SHOW_PERSON_OUTLINE()
+
+Person(customer, User, "A user")
+
+System_Boundary(c1, "Like Tracking") {
+    Container(app, "Web app", "React", "Allows users to like articles via like button", $sprite="react")
+    Container(like_api, "Like API", "C#, ASP.NET 5.0", "Access point for likes ", $tags = "micro service")
+    Container(message_queue, "Message Queue", "Kafka", "Transport for like events")
+    Container(like_tracker, "Like Tracker", "C#, .NET", "Tracks which users liked an article", $tags = "micro service")
+    Container(like_counter, "Like Counter", "C#, .NET", "Counts ammount of likes for an article", $tags = "micro service")
+    ContainerDb(like_tracking_db, "Like Tracking Database", "MongoDb", "Stores users that liked a given article", $tags = "storage")
+    Container(like_counter_store, "Like Counter Store", "MongoDb, Redis", "Caches and stores the ammount of likes an article has", $tags = "storage")
+}
+
+Rel_D(customer, app, "Likes an article", "HTTPS")
+
+
+Rel_U(like_api, app, "Updates like count", "WebSocket")
+Rel_D(app, like_api, "Sends like and unlike information", "async, JSON/HTTPS")
+Rel(like_api, message_queue, "[User_Liked]")
+
+Rel_D(message_queue, like_tracker, "[User_Liked]")
+Rel_D(message_queue, like_counter, "[User_Liked]")
+Rel_D(message_queue, like_api, "[New_Count]")
+Rel(like_counter, message_queue, "[New_Count]")
+
+Rel(like_tracker, like_tracking_db, "Stores data in")
+Rel(like_counter, like_counter_store, "Stores count in")
+
+
+SHOW_LEGEND()
+@enduml
