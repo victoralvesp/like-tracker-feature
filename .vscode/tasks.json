@@ -62,8 +62,8 @@
             "windows": {
                 "command": "${workspaceFolder}/generateCode.ps1",
                 "args": [
-                    "--packageName=LikeTrackingSystem.LikeApi",
-                    "--openApiFile=OpenAPI-LikeApi.yaml"
+                    "-packageName LikeTrackingSystem.LikeApi",
+                    "-openApiFile out/OpenAPI-LikeApi.yaml"
                 ]
             },
             "presentation": {
@@ -73,7 +73,8 @@
                 "panel": "shared",
                 "showReuseMessage": false,
                 "clear": true
-            }
+            },
+            "problemMatcher": []
         },
         {
             "label": "Generate Code - Like Tracker",
@@ -81,8 +82,8 @@
             "windows": {
                 "command": "${workspaceFolder}/generateCode.ps1",
                 "args": [
-                    "--packageName=LikeTrackingSystem.LikeTracker",
-                    "--openApiFile=OpenAPI-LikeTracker.yaml"
+                    "-packageName LikeTrackingSystem.LikeTracker",
+                    "-openApiFile out/OpenAPI-LikeTracker.yaml"
                 ]
             },
             "presentation": {
@@ -100,8 +101,8 @@
             "windows": {
                 "command": "${workspaceFolder}/generateCode.ps1",
                 "args": [
-                    "--packageName=LikeTrackingSystem.LikeCounter",
-                    "--openApiFile=OpenAPI-LikeCounter.yaml"
+                    "-packageName LikeTrackingSystem.LikeCounter",
+                    "-openApiFile out/OpenAPI-LikeCounter.yaml"
                 ]
             },
             "presentation": {

@@ -1,0 +1,19 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "PowerShell: Generate code script - Like Api",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}/generateCode.ps1",
+            "args": [
+                "-packageName LikeTrackingSystem.LikeApi",
+                "-openApiFile out/OpenAPI-LikeApi.yaml"
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
