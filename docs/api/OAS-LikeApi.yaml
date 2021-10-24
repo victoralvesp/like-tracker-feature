@@ -8,6 +8,9 @@ components:
     article_id:
       description: "ID of the article"
       $ref: "components/schemas.yaml#/components/schemas/article_id"
+    user_id:
+      description: "ID of the user"
+      $ref: "components/schemas.yaml#/components/schemas/user_id"
     like_info:
       description: "Information about article likes and current user"
       type: object
@@ -38,9 +41,42 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/article_id"
+        - in: header
+          name: X-User-Id
+          required: true
+          schema:
+            $ref: "#/components/schemas/user_id"
       responses:
         "200":
           description: Information found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/like_info"
+        "400":
+          description: Invalid parameters
+          $ref: "#/components/responses/invalid_parameters"
+        "404":
+          description: Not Found
+          $ref: "#/components/responses/not_found"
+    post:
+      tags:
+        - "Like"
+      operationId: "like_article"
+      parameters:
+        - in: path
+          name: article_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/article_id"
+        - in: header
+          name: X-User-Id
+          required: true
+          schema:
+            $ref: "#/components/schemas/user_id"
+      responses:
+        "200":
+          description: Success
           content:
             application/json:
               schema:
