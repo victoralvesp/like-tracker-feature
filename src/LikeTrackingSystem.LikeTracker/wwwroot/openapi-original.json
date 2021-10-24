@@ -1,0 +1,178 @@
+{
+  "openapi" : "3.0.2",
+  "info" : {
+    "title" : "Like API",
+    "version" : "1.0"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "paths" : {
+    "/users/{user_id}/articles/{article_id}/likes" : {
+      "get" : {
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "article_id",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/article_id"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "user_id",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/user_id"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/user_liked_article"
+                }
+              }
+            },
+            "description" : "User and article found"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_400"
+                }
+              }
+            },
+            "description" : "The parameters you provided are invalid"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "description" : "The requested resource could not be found.\n",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "The resource you were trying to reach is not found"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "responses" : {
+      "not_found" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "description" : "The requested resource could not be found.\n",
+              "type" : "string"
+            }
+          }
+        },
+        "description" : "The resource you were trying to reach is not found"
+      },
+      "invalid_parameters" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/inline_response_400"
+            }
+          }
+        },
+        "description" : "The parameters you provided are invalid"
+      }
+    },
+    "schemas" : {
+      "article_id" : {
+        "description" : "ID of the article",
+        "example" : "e7c8f0f0-e8e0-4e0e-b8b0-f8f8f8f8f8f8",
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "user_id" : {
+        "description" : "User ID",
+        "example" : "f0d9e6ac-18d0-4ab0-b379-d96269fb5c20",
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "user_liked_article" : {
+        "description" : "Whether the user liked the article",
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/user_liked_article_oneOf"
+        }, {
+          "example" : false,
+          "type" : "boolean"
+        } ]
+      },
+      "inline_response_400_errors" : {
+        "properties" : {
+          "field" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "inline_response_400" : {
+        "properties" : {
+          "errors" : {
+            "items" : {
+              "$ref" : "#/components/schemas/inline_response_400_errors"
+            },
+            "type" : "array"
+          },
+          "type" : {
+            "example" : "https://tools.ietf.org/html/rfc2616#section-10.4.7",
+            "type" : "string"
+          },
+          "title" : {
+            "example" : "One or more validation errors ocurred."
+          },
+          "status" : {
+            "example" : 400,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "traceId" : {
+            "example" : "c0a1b2c3d4e5f6a7b8c9d0e1f2",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "user_liked_article_oneOf" : {
+        "description" : "Information about the when the user liked the article",
+        "properties" : {
+          "article_id" : {
+            "description" : "ID of the article",
+            "example" : "e7c8f0f0-e8e0-4e0e-b8b0-f8f8f8f8f8f8",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "user_id" : {
+            "description" : "User ID",
+            "example" : "f0d9e6ac-18d0-4ab0-b379-d96269fb5c20",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "like_date" : {
+            "description" : "Date when the user liked the article",
+            "example" : "2020-01-01T00:00:00Z",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      }
+    }
+  }
+}
