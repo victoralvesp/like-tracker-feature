@@ -28,7 +28,7 @@ namespace LikeTrackingSystem.LikeTracker.Converters
         /// <param name="culture"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object? ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             var s = value as string;
             if (string.IsNullOrEmpty(s))

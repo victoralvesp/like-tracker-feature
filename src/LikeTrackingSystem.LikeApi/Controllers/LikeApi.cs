@@ -52,7 +52,7 @@ namespace LikeTrackingSystem.LikeApi.Controllers
             // return StatusCode(400, default(InlineResponse400));
             //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(404, default(string));
-            string exampleJson = null;
+            string? exampleJson = null;
             exampleJson = "{\r\n  \"user_liked_article\" : \"\",\r\n  \"like_count\" : 0\r\n}";
             
             var example = exampleJson != null
@@ -86,7 +86,7 @@ namespace LikeTrackingSystem.LikeApi.Controllers
             // return StatusCode(400, default(InlineResponse400));
             //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(404, default(string));
-            string exampleJson = null;
+            string? exampleJson = null;
             exampleJson = "{\r\n  \"user_liked_article\" : \"\",\r\n  \"like_count\" : 0\r\n}";
             
             var example = exampleJson != null

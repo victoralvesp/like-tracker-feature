@@ -11,6 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LikeTrackingSystem.LikeCoun
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LikeTrackingSystem.LikeTracker", "src\LikeTrackingSystem.LikeTracker\LikeTrackingSystem.LikeTracker.csproj", "{AAFEFF99-034C-493C-9DDD-59CB105CAFD8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{47775A3B-5761-4BDD-A8E5-5872A0C38E3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LikeTrackingSystem.LikeCounter.Tests", "tests\LikeTrackingSystem.LikeCounter.Tests\LikeTrackingSystem.LikeCounter.Tests.csproj", "{53403E5E-B8F8-4DEE-8E6B-C22E8F34A956}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LikeTrackingSystem.LikeApi.Tests", "tests\LikeTrackingSystem.LikeApi.Tests\LikeTrackingSystem.LikeApi.Tests.csproj", "{4DD7FA00-0749-4315-AE79-2B432582A8E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LikeTrackingSystem.LikeTracker.Tests", "tests\LikeTrackingSystem.LikeTracker.Tests\LikeTrackingSystem.LikeTracker.Tests.csproj", "{646DE9FB-172B-49B2-BE55-8604D69645F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +45,18 @@ Global
 		{AAFEFF99-034C-493C-9DDD-59CB105CAFD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAFEFF99-034C-493C-9DDD-59CB105CAFD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAFEFF99-034C-493C-9DDD-59CB105CAFD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53403E5E-B8F8-4DEE-8E6B-C22E8F34A956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53403E5E-B8F8-4DEE-8E6B-C22E8F34A956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53403E5E-B8F8-4DEE-8E6B-C22E8F34A956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53403E5E-B8F8-4DEE-8E6B-C22E8F34A956}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DD7FA00-0749-4315-AE79-2B432582A8E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DD7FA00-0749-4315-AE79-2B432582A8E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DD7FA00-0749-4315-AE79-2B432582A8E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DD7FA00-0749-4315-AE79-2B432582A8E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{646DE9FB-172B-49B2-BE55-8604D69645F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{646DE9FB-172B-49B2-BE55-8604D69645F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{646DE9FB-172B-49B2-BE55-8604D69645F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{646DE9FB-172B-49B2-BE55-8604D69645F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,5 +64,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3FF14BCE-D589-47EB-A244-539C4DE44EE5} = {B6CC1E7B-A3A5-4F33-806E-B943AB1A2B94}
 		{AAFEFF99-034C-493C-9DDD-59CB105CAFD8} = {B6CC1E7B-A3A5-4F33-806E-B943AB1A2B94}
+		{53403E5E-B8F8-4DEE-8E6B-C22E8F34A956} = {47775A3B-5761-4BDD-A8E5-5872A0C38E3F}
+		{4DD7FA00-0749-4315-AE79-2B432582A8E9} = {47775A3B-5761-4BDD-A8E5-5872A0C38E3F}
+		{646DE9FB-172B-49B2-BE55-8604D69645F3} = {47775A3B-5761-4BDD-A8E5-5872A0C38E3F}
 	EndGlobalSection
 EndGlobal

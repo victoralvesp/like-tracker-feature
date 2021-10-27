@@ -9,7 +9,7 @@ namespace LikeTrackingSystem.LikeApi.Messaging
     /// <param name="UserId"></param>
     public record LikeArticleMessage(string ArticleId, string UserId) : IMessage
     {
-        ///</inheritdoc>
+        ///<inheritdoc/>
         public string MessageType => "LikeArticle";
     }
     

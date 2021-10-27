@@ -30,13 +30,13 @@ namespace LikeTrackingSystem.LikeTracker.Models
         /// Gets or Sets Field
         /// </summary>
         [DataMember(Name="field", EmitDefaultValue=false)]
-        public string Field { get; set; }
+        public string? Field { get; set; }
 
         /// <summary>
         /// Gets or Sets Message
         /// </summary>
         [DataMember(Name="message", EmitDefaultValue=false)]
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

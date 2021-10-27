@@ -52,21 +52,24 @@ namespace LikeTrackingSystem.LikeApi.Filters
                             minLength = length;
                         }
                         
-                        maxLength = (int)stringLengthAttr.ConstructorArguments[0].Value;
+                        if (stringLengthAttr.ConstructorArguments[0].Value is int maxLengthVal)
+                        {
+                            maxLength = maxLengthVal;
+                        }
                     }
 
                     var minLengthAttr = attributes.FirstOrDefault(p => p.AttributeType == typeof(MinLengthAttribute));
-                    if (minLengthAttr is not null)
+                    if (minLengthAttr is not null && minLengthAttr.ConstructorArguments[0].Value is int min)
                     {
-                        minLength = (int)minLengthAttr.ConstructorArguments[0].Value;
+                        minLength = min;
                     }
 
                     var maxLengthAttr = attributes.FirstOrDefault(p => p.AttributeType == typeof(MaxLengthAttribute));
-                    if (maxLengthAttr is not null)
+                    if (maxLengthAttr is not null && maxLengthAttr.ConstructorArguments[0].Value is int max)
                     {
-                        maxLength = (int)maxLengthAttr.ConstructorArguments[0].Value;
+                        maxLength = max;
                     }
-
+                    
                     if (minLength is not null)
                     {
                         openapiParam.Schema.MinLength = minLength;
@@ -81,11 +84,14 @@ namespace LikeTrackingSystem.LikeApi.Filters
                     var rangeAttr = attributes.FirstOrDefault(p => p.AttributeType == typeof(RangeAttribute));
                     if (rangeAttr is not null)
                     {
-                        var rangeMin = (int)rangeAttr.ConstructorArguments[0].Value;
-                        var rangeMax = (int)rangeAttr.ConstructorArguments[1].Value;
-
-                        openapiParam.Schema.MinLength = rangeMin;
-                        openapiParam.Schema.MaxLength = rangeMax;
+                        if (rangeAttr.ConstructorArguments[0].Value is int minRange)
+                        {
+                            openapiParam.Schema.MinLength = minRange;
+                        }
+                        if (rangeAttr.ConstructorArguments[1].Value is int maxRange)
+                        {
+                            openapiParam.Schema.MaxLength = maxRange;
+                        }
                     }
                 }
             }

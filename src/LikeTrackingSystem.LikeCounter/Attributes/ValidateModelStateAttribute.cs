@@ -24,9 +24,9 @@ namespace LikeTrackingSystem.LikeCounter.Attributes
             {
                 foreach (var parameter in descriptor.MethodInfo.GetParameters())
                 {
-                    object args = null;
-                    if (context.ActionArguments.ContainsKey(parameter.Name))
-                    { 
+                    object? args = null;
+                    if (parameter is { Name: { Length: > 0 } } && context.ActionArguments.ContainsKey(parameter.Name))
+                    {
                         args = context.ActionArguments[parameter.Name];
                     }
 
@@ -40,14 +40,15 @@ namespace LikeTrackingSystem.LikeCounter.Attributes
             }
         }
 
-        private void ValidateAttributes(ParameterInfo parameter, object args, ModelStateDictionary modelState)
+        private void ValidateAttributes(ParameterInfo parameter, object? args, ModelStateDictionary modelState)
         {
             foreach (var attributeData in parameter.CustomAttributes)
             {
                 var attributeInstance = parameter.GetCustomAttribute(attributeData.AttributeType);
 
                 var validationAttribute = attributeInstance as ValidationAttribute;
-                if (validationAttribute is not null)
+                if (validationAttribute is not null 
+                    && parameter is { Name: { Length: > 0 } })
                 {
                     var isValid = validationAttribute.IsValid(args);
                     if (!isValid)

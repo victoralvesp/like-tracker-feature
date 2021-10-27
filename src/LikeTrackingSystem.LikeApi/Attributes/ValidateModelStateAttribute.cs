@@ -18,15 +18,16 @@ namespace LikeTrackingSystem.LikeApi.Attributes
         /// <param name="context"></param>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            // Per https://blog.markvincze.com/how-to-validate-action-parameters-with-dataannotation-attributes/
             var descriptor = context.ActionDescriptor as ControllerActionDescriptor;
             if (descriptor is not null)
             {
                 foreach (var parameter in descriptor.MethodInfo.GetParameters())
                 {
                     object? args = null;
-                    if (context.ActionArguments.ContainsKey(parameter.Name!))
-                    { 
-                        args = context.ActionArguments[parameter.Name!];
+                    if (parameter is { Name: { Length: > 0 } } && context.ActionArguments.ContainsKey(parameter.Name))
+                    {
+                        args = context.ActionArguments[parameter.Name];
                     }
 
                     ValidateAttributes(parameter, args, context.ModelState);
@@ -46,12 +47,13 @@ namespace LikeTrackingSystem.LikeApi.Attributes
                 var attributeInstance = parameter.GetCustomAttribute(attributeData.AttributeType);
 
                 var validationAttribute = attributeInstance as ValidationAttribute;
-                if (validationAttribute is not null)
+                if (validationAttribute is not null 
+                    && parameter is { Name: { Length: > 0 } })
                 {
                     var isValid = validationAttribute.IsValid(args);
                     if (!isValid)
                     {
-                        modelState.AddModelError(parameter.Name!, validationAttribute.FormatErrorMessage(parameter.Name!));
+                        modelState.AddModelError(parameter.Name, validationAttribute.FormatErrorMessage(parameter.Name));
                     }
                 }
             }

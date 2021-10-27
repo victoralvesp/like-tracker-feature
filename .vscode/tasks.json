@@ -148,6 +148,33 @@
                 "showReuseMessage": false,
                 "clear": true
             }
-        }
+        },
+        {
+          "label": "build sln",
+          "type": "process",
+          "command": "dotnet",
+          "args": [
+            "build",
+            "${workspaceFolder}",
+            "--configuration",
+            "Debug"
+          ],
+          "options": {
+            "cwd": "${workspaceFolder}"
+          },
+          "group": "build",
+          "presentation": {
+            "echo": true,
+            "reveal": "silent",
+            "focus": false,
+            "panel": "shared",
+            "showReuseMessage": false,
+            "clear": false
+          },
+          "problemMatcher": [
+            "$msCompile"
+          ]
+        },
+        
     ]
 }

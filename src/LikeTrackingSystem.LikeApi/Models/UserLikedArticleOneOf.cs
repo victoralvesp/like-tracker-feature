@@ -145,12 +145,12 @@ namespace LikeTrackingSystem.LikeApi.Models
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(UserLikedArticleOneOf left, UserLikedArticleOneOf right)
+        public static bool operator ==(UserLikedArticleOneOf? left, UserLikedArticleOneOf? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(UserLikedArticleOneOf left, UserLikedArticleOneOf right)
+        public static bool operator !=(UserLikedArticleOneOf? left, UserLikedArticleOneOf? right)
         {
             return !Equals(left, right);
         }

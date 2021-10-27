@@ -30,31 +30,31 @@ namespace LikeTrackingSystem.LikeApi.Models
         /// Gets or Sets Errors
         /// </summary>
         [DataMember(Name="errors", EmitDefaultValue=false)]
-        public List<InlineResponse400Errors> Errors { get; set; }
+        public List<InlineResponse400Errors>? Errors { get; set; }
 
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         /// <summary>
         /// Gets or Sets Title
         /// </summary>
         [DataMember(Name="title", EmitDefaultValue=true)]
-        public Object Title { get; set; }
+        public Object? Title { get; set; }
 
         /// <summary>
         /// Gets or Sets Status
         /// </summary>
         [DataMember(Name="status", EmitDefaultValue=false)]
-        public int Status { get; set; }
+        public int? Status { get; set; }
 
         /// <summary>
         /// Gets or Sets TraceId
         /// </summary>
         [DataMember(Name="traceId", EmitDefaultValue=false)]
-        public string TraceId { get; set; }
+        public string? TraceId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object

@@ -37,36 +37,39 @@ namespace LikeTrackingSystem.LikeTracker.Filters
 
                     // Regex Pattern [RegularExpression]
                     var regexAttr = attributes.FirstOrDefault(p => p.AttributeType == typeof(RegularExpressionAttribute));
-                    if (regexAttr is not null)
+                    if (regexAttr is not null and { ConstructorArguments.Count: > 0 } && regexAttr.ConstructorArguments[0].Value is string regex)
                     {
-                        var regex = (string)regexAttr.ConstructorArguments[0].Value;
                         openapiParam.Schema.Pattern = regex;
                     }
 
                     // String Length [StringLength]
                     int? minLength = null, maxLength = null;
                     var stringLengthAttr = attributes.FirstOrDefault(p => p.AttributeType == typeof(StringLengthAttribute));
-                    if (stringLengthAttr is not null)
+                    if (stringLengthAttr is not null and { NamedArguments.Count: > 0})
                     {
-                        if (stringLengthAttr.NamedArguments.Count == 1)
+                        if (stringLengthAttr.NamedArguments.Count is 1 && stringLengthAttr.NamedArguments.Single(p => p.MemberName == "MinimumLength").TypedValue.Value is int length)
                         {
-                            minLength = (int)stringLengthAttr.NamedArguments.Single(p => p.MemberName == "MinimumLength").TypedValue.Value;
+                            minLength = length;
                         }
-                        maxLength = (int)stringLengthAttr.ConstructorArguments[0].Value;
+                        
+                        if (stringLengthAttr.ConstructorArguments[0].Value is int maxLengthVal)
+                        {
+                            maxLength = maxLengthVal;
+                        }
                     }
 
                     var minLengthAttr = attributes.FirstOrDefault(p => p.AttributeType == typeof(MinLengthAttribute));
-                    if (minLengthAttr is not null)
+                    if (minLengthAttr is not null && minLengthAttr.ConstructorArguments[0].Value is int min)
                     {
-                        minLength = (int)minLengthAttr.ConstructorArguments[0].Value;
+                        minLength = min;
                     }
 
                     var maxLengthAttr = attributes.FirstOrDefault(p => p.AttributeType == typeof(MaxLengthAttribute));
-                    if (maxLengthAttr is not null)
+                    if (maxLengthAttr is not null && maxLengthAttr.ConstructorArguments[0].Value is int max)
                     {
-                        maxLength = (int)maxLengthAttr.ConstructorArguments[0].Value;
+                        maxLength = max;
                     }
-
+                    
                     if (minLength is not null)
                     {
                         openapiParam.Schema.MinLength = minLength;
@@ -81,11 +84,14 @@ namespace LikeTrackingSystem.LikeTracker.Filters
                     var rangeAttr = attributes.FirstOrDefault(p => p.AttributeType == typeof(RangeAttribute));
                     if (rangeAttr is not null)
                     {
-                        var rangeMin = (int)rangeAttr.ConstructorArguments[0].Value;
-                        var rangeMax = (int)rangeAttr.ConstructorArguments[1].Value;
-
-                        openapiParam.Schema.MinLength = rangeMin;
-                        openapiParam.Schema.MaxLength = rangeMax;
+                        if (rangeAttr.ConstructorArguments[0].Value is int minRange)
+                        {
+                            openapiParam.Schema.MinLength = minRange;
+                        }
+                        if (rangeAttr.ConstructorArguments[1].Value is int maxRange)
+                        {
+                            openapiParam.Schema.MaxLength = maxRange;
+                        }
                     }
                 }
             }

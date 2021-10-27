@@ -37,7 +37,7 @@ namespace LikeTrackingSystem.LikeApi.Models
         /// </summary>
         /// <value>Whether the user liked the article</value>
         [DataMember(Name="user_liked_article", EmitDefaultValue=false)]
-        public UserLikedArticleOneOf UserLikedArticle { get; set; }
+        public UserLikedArticleOneOf? UserLikedArticle { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
