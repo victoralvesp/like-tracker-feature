@@ -29,11 +29,12 @@ Rel_D(customer, app, "Request articles", "HTTPS")
 Rel_U(like_api, app, "Informs like count and user like state", "JSON/HTTPS")
 Rel_D(app, like_api, "Requests article like information", "sync, JSON/HTTPS")
 
-like_api <--> like_counter: Current count [sync, JSON/HTTPS]
-like_api <--> like_tracker: Has user liked this article [sync, JSON/HTTPS]
+like_api --> like_counter: Current count [sync, JSON/HTTPS]
+like_api --> like_tracker: Has user liked this article? [sync, JSON/HTTPS]
 
-Rel(like_tracker, like_tracking_db, "")
-Rel(like_counter, like_counter_store, "")
+
+like_tracker --> like_tracking_db
+like_counter --> like_counter_store
 
 
 SHOW_LEGEND()

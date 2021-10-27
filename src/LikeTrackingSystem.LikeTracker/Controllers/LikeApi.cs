@@ -17,46 +17,47 @@ using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Newtonsoft.Json;
-using LikeTrackingSystem.LikeApi.Attributes;
-using LikeTrackingSystem.LikeApi.Models;
+using LikeTrackingSystem.LikeTracker.Attributes;
+using LikeTrackingSystem.LikeTracker.Models;
 
-namespace LikeTrackingSystem.LikeApi.Controllers
+namespace LikeTrackingSystem.LikeTracker.Controllers
 { 
     /// <summary>
     /// 
     /// </summary>
     [ApiController]
-    public class DefaultApiController : ControllerBase
+    public class LikeApiController : ControllerBase
     { 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="articleId"></param>
-        /// <response code="200">Information found</response>
+        /// <param name="userId"></param>
+        /// <response code="200">User and article found</response>
         /// <response code="400">The parameters you provided are invalid</response>
         /// <response code="404">The resource you were trying to reach is not found</response>
         [HttpGet]
-        [Route("/articles/{article_id}/likes")]
+        [Route("/users/{user_id}/articles/{article_id}/likes")]
         [ValidateModelState]
-        [SwaggerOperation("ArticlesArticleIdLikesGet")]
-        [SwaggerResponse(statusCode: 200, type: typeof(LikeInfo), description: "Information found")]
+        [SwaggerOperation("UserLikedArticle")]
+        [SwaggerResponse(statusCode: 200, type: typeof(UserLikedArticle), description: "User and article found")]
         [SwaggerResponse(statusCode: 400, type: typeof(InlineResponse400), description: "The parameters you provided are invalid")]
         [SwaggerResponse(statusCode: 404, type: typeof(string), description: "The resource you were trying to reach is not found")]
-        public virtual IActionResult ArticlesArticleIdLikesGet([FromRoute (Name = "article_id")][Required]Guid articleId)
+        public virtual IActionResult UserLikedArticle([FromRoute (Name = "article_id")][Required]Guid articleId, [FromRoute (Name = "user_id")][Required]Guid userId)
         { 
 
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(LikeInfo));
+            // return StatusCode(200, default(UserLikedArticle));
             //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(400, default(InlineResponse400));
             //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(404, default(string));
             string exampleJson = null;
-            exampleJson = "{\r\n  \"user_liked_article\" : \"\",\r\n  \"like_count\" : 0\r\n}";
+            exampleJson = "null";
             
-            var example = exampleJson is not null
-            ? JsonConvert.DeserializeObject<LikeInfo>(exampleJson)
-            : default(LikeInfo);
+            var example = exampleJson != null
+            ? JsonConvert.DeserializeObject<UserLikedArticle>(exampleJson)
+            : default(UserLikedArticle);
             //TODO: Change the data returned
             return new ObjectResult(example);
         }

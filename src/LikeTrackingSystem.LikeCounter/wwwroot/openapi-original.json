@@ -10,6 +10,7 @@
   "paths" : {
     "/articles/{article_id}/likes" : {
       "get" : {
+        "operationId" : "get_like_count",
         "parameters" : [ {
           "explode" : false,
           "in" : "path",
@@ -52,7 +53,8 @@
             },
             "description" : "The resource you were trying to reach is not found"
           }
-        }
+        },
+        "tags" : [ "Like" ]
       }
     }
   },

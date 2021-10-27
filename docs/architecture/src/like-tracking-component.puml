@@ -32,7 +32,8 @@ Rel_D(app, like_api, "Sends like and unlike information", "async, JSON/HTTPS")
 Rel(like_api, message_queue, "[User_Liked]")
 
 Rel_D(message_queue, like_tracker, "[User_Liked]")
-Rel_D(message_queue, like_counter, "[User_Liked]")
+Rel_D(like_tracker, message_queue, "[Article_Liked]")
+Rel_D(message_queue, like_counter, "[Article_Liked]")
 Rel_D(message_queue, like_api, "[New_Count]")
 Rel(like_counter, message_queue, "[New_Count]")
 

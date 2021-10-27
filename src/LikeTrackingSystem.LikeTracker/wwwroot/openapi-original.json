@@ -10,6 +10,7 @@
   "paths" : {
     "/users/{user_id}/articles/{article_id}/likes" : {
       "get" : {
+        "operationId" : "user_liked_article",
         "parameters" : [ {
           "explode" : false,
           "in" : "path",
@@ -61,7 +62,8 @@
             },
             "description" : "The resource you were trying to reach is not found"
           }
-        }
+        },
+        "tags" : [ "Like" ]
       }
     }
   },

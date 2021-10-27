@@ -9,6 +9,11 @@ components:
       description: ID of the article
       format: uuid
       example: e7c8f0f0-e8e0-4e0e-b8b0-f8f8f8f8f8f8
+    user_id:
+      type: string
+      format: uuid
+      description: User ID
+      example: f0d9e6ac-18d0-4ab0-b379-d96269fb5c20
     like_info:
       description: Information about article likes and current user
       type: object
@@ -79,15 +84,51 @@ components:
 paths:
   "/articles/{article_id}/likes":
     get:
+      tags:
+        - Like
+      operationId: article_likes_info
       parameters:
         - in: path
           name: article_id
           required: true
           schema:
             $ref: "#/components/schemas/article_id"
+        - in: header
+          name: X-User-Id
+          required: true
+          schema:
+            $ref: "#/components/schemas/user_id"
       responses:
         "200":
           description: Information found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/like_info"
+        "400":
+          description: Invalid parameters
+          $ref: "#/components/responses/invalid_parameters"
+        "404":
+          description: Not Found
+          $ref: "#/components/responses/not_found"
+    post:
+      tags:
+        - Like
+      operationId: like_article
+      parameters:
+        - in: path
+          name: article_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/article_id"
+        - in: header
+          name: X-User-Id
+          required: true
+          schema:
+            $ref: "#/components/schemas/user_id"
+      responses:
+        "200":
+          description: Success
           content:
             application/json:
               schema:

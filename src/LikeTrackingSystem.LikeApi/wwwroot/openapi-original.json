@@ -10,6 +10,7 @@
   "paths" : {
     "/articles/{article_id}/likes" : {
       "get" : {
+        "operationId" : "article_likes_info",
         "parameters" : [ {
           "explode" : false,
           "in" : "path",
@@ -17,6 +18,15 @@
           "required" : true,
           "schema" : {
             "$ref" : "#/components/schemas/article_id"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "X-User-Id",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/user_id"
           },
           "style" : "simple"
         } ],
@@ -52,7 +62,64 @@
             },
             "description" : "The resource you were trying to reach is not found"
           }
-        }
+        },
+        "tags" : [ "Like" ]
+      },
+      "post" : {
+        "operationId" : "like_article",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "article_id",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/article_id"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "header",
+          "name" : "X-User-Id",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/user_id"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/like_info"
+                }
+              }
+            },
+            "description" : "Success"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_400"
+                }
+              }
+            },
+            "description" : "The parameters you provided are invalid"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "description" : "The requested resource could not be found.\n",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "The resource you were trying to reach is not found"
+          }
+        },
+        "tags" : [ "Like" ]
       }
     }
   },
@@ -84,6 +151,12 @@
       "article_id" : {
         "description" : "ID of the article",
         "example" : "e7c8f0f0-e8e0-4e0e-b8b0-f8f8f8f8f8f8",
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "user_id" : {
+        "description" : "User ID",
+        "example" : "f0d9e6ac-18d0-4ab0-b379-d96269fb5c20",
         "format" : "uuid",
         "type" : "string"
       },
