@@ -12,8 +12,8 @@ namespace LikeTrackingSystem.LikeApi.Tests
         public void Publish_Message_When_User_Likes_An_Article()
         {
             //Given
-            var articleService = Mock.Of<IArticleService>();
             var messagingBoard = Mock.Of<IMessagingBoard>();
+            var articleService = new ArticleService(messagingBoard);
             //When
             articleService.LikeArticle(articleId: "1", userId: "1");
 
