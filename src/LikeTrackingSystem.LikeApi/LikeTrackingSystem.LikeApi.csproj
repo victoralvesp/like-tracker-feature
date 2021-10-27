@@ -24,6 +24,7 @@
     <PackageReference Include="JsonSubTypes" Version="1.8.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\LikeTrackingSystem.Framework\LikeTrackingSystem.Framework.csproj" />
     <!--<DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0" />-->
   </ItemGroup>
 </Project>
