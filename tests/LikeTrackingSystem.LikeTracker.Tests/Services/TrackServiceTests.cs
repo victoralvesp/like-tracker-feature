@@ -15,7 +15,7 @@ namespace LikeTrackingSystem.LikeTracker.Tests.Services
             //Given
             var mockLikeRepository = new Mock<ILikeRepository>();
             var mockMessagingBoard = new Mock<IMessagingBoard>();
-            var trackService = Mock.Of<ITrackService>();
+            var trackService = new TrackService(mockLikeRepository.Object, mockMessagingBoard.Object);
 
             //When
             trackService.UserLikedArticle("articleId", "userId");
