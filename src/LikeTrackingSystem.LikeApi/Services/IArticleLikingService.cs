@@ -6,7 +6,7 @@ namespace LikeTrackingSystem.LikeApi.Services
     /// <summary>
     /// Provides methods for working with articles.
     /// </summary>
-    public interface IArticleService
+    public interface IArticleLikingService
     {
         /// <summary>
         /// Informs the service that the user with the specified <paramref name="userId"/> has liked the article with the specified <paramref name="articleId"/>.
@@ -17,16 +17,16 @@ namespace LikeTrackingSystem.LikeApi.Services
     }
 
     /// <inheritdoc/>
-    public class ArticleService : IArticleService
+    public class ArticleLikingService : IArticleLikingService
     {
 
         private readonly IMessagingBoard _messagingBoard;
 
         /// <summary>
-        /// Constructor with injected dependencies for the <see cref="ArticleService"/>.
+        /// Constructor with injected dependencies for the <see cref="ArticleLikingService"/>.
         /// </summary>
         /// <param name="messagingBoard"></param>
-        public ArticleService(IMessagingBoard messagingBoard)
+        public ArticleLikingService(IMessagingBoard messagingBoard)
         {
             _messagingBoard = messagingBoard;
         }

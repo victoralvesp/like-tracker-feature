@@ -6,14 +6,14 @@ using Xunit;
 
 namespace LikeTrackingSystem.LikeApi.Tests
 {
-    public class ArticleServiceTests
+    public class ArticleLikingServiceTests
     {
         [Fact]
         public void Publish_Message_When_User_Likes_An_Article()
         {
             //Given
             var messagingBoard = Mock.Of<IMessagingBoard>();
-            var articleService = new ArticleService(messagingBoard);
+            var articleService = new ArticleLikingService(messagingBoard);
             //When
             articleService.LikeArticle(articleId: "1", userId: "1");
 
