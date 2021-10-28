@@ -20,7 +20,7 @@ namespace LikeTrackingSystem.LikeTracker.Services
     /// <inheritdoc/>
     public class TrackService : ITrackService
     {
-        private readonly ILikeRepository _likeRepository;
+        private readonly IArticleLikeRepository _likeRepository;
         private readonly IMessagingBoard _messagingBoard;
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace LikeTrackingSystem.LikeTracker.Services
         /// </summary>
         /// <param name="likeRepository"></param>
         /// <param name="messagingBoard"></param>
-        public TrackService(ILikeRepository likeRepository, IMessagingBoard messagingBoard)
+        public TrackService(IArticleLikeRepository likeRepository, IMessagingBoard messagingBoard)
         {
             _likeRepository = likeRepository;
             _messagingBoard = messagingBoard;

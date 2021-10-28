@@ -21,7 +21,7 @@ System_Boundary(c1, "Like Tracking") {
     Container(like_tracker, "Like Tracker", "C#, .NET", "Tracks which users liked an article", $tags = "micro service")
     Container(like_counter, "Like Counter", "C#, .NET", "Counts ammount of likes for an article", $tags = "micro service")
     ContainerDb(like_tracking_db, "Like Tracking Database", "MongoDb", "Stores users that liked a given article", $tags = "storage")
-    Container(like_counter_store, "Like Counter Store", "MongoDb, Redis", "Caches and stores the ammount of likes an article has", $tags = "storage")
+    Container(like_counter_db, "Like Counter Store", "MongoDb, Redis", "Stores a list of uncounted likes and caches count values", $tags = "storage")
 }
 
 Rel_D(customer, app, "Likes an article", "HTTPS")
@@ -38,7 +38,7 @@ Rel_D(message_queue, like_api, "[New_Count]")
 Rel(like_counter, message_queue, "[New_Count]")
 
 Rel(like_tracker, like_tracking_db, "Stores data in")
-Rel(like_counter, like_counter_store, "Stores count in")
+Rel(like_counter, like_counter_db, "Stores count in")
 
 
 SHOW_LEGEND()

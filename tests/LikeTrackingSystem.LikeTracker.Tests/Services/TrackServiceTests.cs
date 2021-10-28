@@ -13,7 +13,7 @@ namespace LikeTrackingSystem.LikeTracker.Tests.Services
         public void Should_Register_That_User_Liked_An_Article_And_Publish_A_Message()
         {
             //Given
-            var mockLikeRepository = new Mock<ILikeRepository>();
+            var mockLikeRepository = new Mock<IArticleLikeRepository>();
             var mockMessagingBoard = new Mock<IMessagingBoard>();
             var trackService = new TrackService(mockLikeRepository.Object, mockMessagingBoard.Object);
 
