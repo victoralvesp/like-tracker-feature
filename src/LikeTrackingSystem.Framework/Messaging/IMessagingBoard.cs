@@ -1,16 +1,14 @@
 namespace LikeTrackingSystem.Framework.Messaging
 {
+    /// <summary>
+    /// A messaging board is a place where messages can be posted and received.
+    /// </summary>
     public interface IMessagingBoard
     {
-        void Publish(IMessage likeArticleMessage);
-    }
-
-    public interface IMessage
-    {
         /// <summary>
-        /// Represents the message type.
+        /// Posts a message to the board.
         /// </summary>
-        /// <value></value>
-        string MessageType { get; }
+        /// <param name="message">The posted message</param>
+        void Publish(IMessage message);
     }
 }

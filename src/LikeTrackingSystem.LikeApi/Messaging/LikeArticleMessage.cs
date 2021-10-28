@@ -1,3 +1,4 @@
+using System;
 using LikeTrackingSystem.Framework.Messaging;
 
 namespace LikeTrackingSystem.LikeApi.Messaging
@@ -11,6 +12,9 @@ namespace LikeTrackingSystem.LikeApi.Messaging
     {
         ///<inheritdoc/>
         public string MessageType => "LikeArticle";
+
+        ///<inheritdoc/>
+        public long Timestamp { get; } = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     }
-    
+
 }

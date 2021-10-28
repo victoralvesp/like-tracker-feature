@@ -7,7 +7,9 @@
 1. Tracker
 -> TrackerMessageBoard -> trackService.Validate //saves or discards -> articleRepo.save -> messagingBoard.Publish(Article_Liked, {article_id, user_id })
 1. Counter
--> CounterMessageBoard -> repository.AtomicIncrease(article_id) -> messagingBoard.Publish(New_Like_Count, {article_id, count})
+-> CounterMessageBoard -> repository.AddEvent(article_id, event_hash, event_type) 
+1. Counting cycle
+   AllEvents -> count likes / unlikes -> messagingBoard.Publish(New_Like_Count, {article_id, count})
 
 ## Remove like
 1. API
