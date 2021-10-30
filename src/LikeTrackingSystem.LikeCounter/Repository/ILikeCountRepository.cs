@@ -10,6 +10,13 @@ namespace LikeTrackingSystem.LikeCounter.Repository
         /// </summary>
         /// <param name="articleId">Article's UUID </param>
         int LikeCount(string articleId);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="articleId"></param>
+        /// <returns></returns>
+        int AtomicIncrement(string articleId);
     }
 
 }

@@ -8,9 +8,10 @@ namespace LikeTrackingSystem.LikeCounter.Repository
     public interface ILikeEventRepository
     {
         /// <summary>
-        /// 
+        /// Counts the event as a new like.
         /// </summary>
-        /// <returns></returns>
-        IEnumerable<ArticleLikeEvent> NewEvents();
+        /// <param name="articleEvent"></param>
+        /// <returns>True if the article was added; false if it already existed</returns>
+        bool AddEvent(ArticleLikeEvent articleEvent);
     }
 }

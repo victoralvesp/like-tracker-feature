@@ -36,6 +36,17 @@ namespace LikeTrackingSystem.Framework.Logging
 
     }
 
+    internal class NullLog : ILogBook
+    {
+        public void AddContext(ILogEventEnricher enricher) { }
+
+        public void AddContext(IEnumerable<ILogEventEnricher> enrichers) { }
+
+        public void AddContext(string propertyName, object value, bool destructureObjects = false) { }
+
+        public void Write(LogEvent logEvent) { }
+    }
+
     internal class DefaultTextFormatter : ITextFormatter
     {
         public void Format(LogEvent logEvent, TextWriter output)

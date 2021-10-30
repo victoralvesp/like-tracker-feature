@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FluentAssertions;
 using LikeTrackingSystem.LikeCounter.Counter;
 using LikeTrackingSystem.LikeCounter.Repository;
@@ -15,8 +16,9 @@ namespace LikeTrackingSystem.LikeCounter.Tests.Counter
         public void Should_Count_New_Events()
         {
             //Given that there are 10 article likes counted for id 19A41755
-            var likeCounter = Mock.Of<ILikeCounter>();
             var likeCountRepository = LikeCountRepository(likeCount: 10);
+            var likeCounterEvent = LikeEventRepository();
+            var likeCounter = new SimpleLikeCounter(likeCountRepository, likeCounterEvent);
 
             //When a new like event arrives for id 19A41755
             var articleEvent = LikeEvent(articleId: "19A41755");
@@ -30,8 +32,10 @@ namespace LikeTrackingSystem.LikeCounter.Tests.Counter
         public void Should_Not_Count_Events_Twice()
         {
             //Given that there are 10 article likes counted for id 19A41755
-            var likeCounter = Mock.Of<ILikeCounter>();
             var likeCountRepository = LikeCountRepository(likeCount: 10);
+            var likeCounterEvent = LikeEventRepository();
+            var likeCounter = new SimpleLikeCounter(likeCountRepository, likeCounterEvent);
+
 
             //When a new like event arrives for id 19A41755
             var articleEvent = LikeEvent(articleId: "19A41755");
@@ -47,18 +51,31 @@ namespace LikeTrackingSystem.LikeCounter.Tests.Counter
         {
             var mock = new Mock<ILikeCountRepository>();
 
+            var localCount = likeCount;
             mock.Setup(x => x.LikeCount(It.IsAny<string>()))
-                .Returns(likeCount);
+                .Returns<string>((_) => localCount);
+            mock.Setup(x => x.AtomicIncrement(It.IsAny<string>()))
+                .Callback<string>((_) => Interlocked.Add(ref localCount, 1))
+                .Returns<string>((_) => localCount);
 
             return mock.Object;
         }
 
-        private ILikeEventRepository LikeEventRepository(int newEvents, string? articleId = null)
+        private ILikeEventRepository LikeEventRepository(int newEvents = 0, string? articleId = null)
         {
             var mock = new Mock<ILikeEventRepository>();
-            var savedEvents = GenerateRandomEvents(newEvents, articleId).ToArray();
-            mock.Setup(x => x.NewEvents())
-                .Returns(savedEvents);
+            // var savedEvents = GenerateRandomEvents(newEvents, articleId).ToArray();
+            var savedEvents = new Dictionary<string, ArticleLikeEvent>();
+
+            // ensure that the events are saved
+            mock.Setup(x => x.AddEvent(It.IsAny<ArticleLikeEvent>()))
+                .Returns<ArticleLikeEvent>((x) =>
+                {
+                    var willSave = !savedEvents.ContainsKey(x.EventHash);
+                    if (willSave)
+                        savedEvents.Add(x.EventHash, x);
+                    return willSave;
+                });
             return mock.Object;
         }
 
