@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Moq;
 using System.Linq;
+using LikeTrackingSystem.Framework.Messaging;
 
 namespace LikeTrackingSystem.LikeTracker
 {
@@ -63,6 +64,7 @@ namespace LikeTrackingSystem.LikeTracker
             services
                 .AddScoped<ITrackService, TrackService>()
                 .AddSingleton<IArticleLikeRepository>((serv) => InMemoryArticleLikeRepository())
+                .AddSingleton<IMessagingBoard>(serv => MockMessageBoard())
                 .AddControllers(options =>
                 {
                     options.InputFormatters.Insert(0, new InputFormatterStream());
@@ -106,6 +108,11 @@ namespace LikeTrackingSystem.LikeTracker
                 });
             services
                 .AddSwaggerGenNewtonsoftSupport();
+        }
+
+        private IMessagingBoard MockMessageBoard()
+        {
+            return new Mock<IMessagingBoard>(MockBehavior.Loose).Object;
         }
 
         private IArticleLikeRepository InMemoryArticleLikeRepository()

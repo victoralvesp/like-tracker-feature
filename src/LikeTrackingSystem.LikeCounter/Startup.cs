@@ -30,6 +30,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading;
+using LikeTrackingSystem.Framework.Messaging;
 
 namespace LikeTrackingSystem.LikeCounter
 {
@@ -64,6 +65,7 @@ namespace LikeTrackingSystem.LikeCounter
                 .AddScoped<ILikeCounter, SimpleLikeCounter>()
                 .AddSingleton<ILikeCountRepository>(MockLikeCountRepository)
                 .AddSingleton<ILikeEventRepository>(MockLikeEventRepository)
+                .AddSingleton<IMessagingBoard>(serv => MockMessageBoard())
                 .AddControllers(options =>
                 {
                     options.InputFormatters.Insert(0, new InputFormatterStream());
@@ -107,6 +109,11 @@ namespace LikeTrackingSystem.LikeCounter
                 });
             services
                 .AddSwaggerGenNewtonsoftSupport();
+        }
+
+        private IMessagingBoard MockMessageBoard()
+        {
+            return new Mock<IMessagingBoard>(MockBehavior.Loose).Object;
         }
 
         private ILikeEventRepository MockLikeEventRepository(IServiceProvider services)

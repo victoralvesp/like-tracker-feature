@@ -26,6 +26,8 @@ using LikeTrackingSystem.LikeApi.OpenApi;
 using LikeTrackingSystem.LikeApi.Formatters;
 using LikeTrackingSystem.LikeApi.Services;
 using LikeTrackingSystem.LikeApi.Options;
+using LikeTrackingSystem.Framework.Messaging;
+using Moq;
 
 namespace LikeTrackingSystem.LikeApi
 {
@@ -60,6 +62,7 @@ namespace LikeTrackingSystem.LikeApi
                 .AddScoped<ILikeCounterService, LikeCounterService>()
                 .AddScoped<ILikeTrackingService, LikeTrackingService>()
                 .AddScoped<IArticleLikingService, ArticleLikingService>()
+                .AddSingleton<IMessagingBoard>(serv => MockMessageBoard())
                 
                 .AddControllers(options => {
                     options.InputFormatters.Insert(0, new InputFormatterStream());
@@ -105,6 +108,11 @@ namespace LikeTrackingSystem.LikeApi
                 });
                 services
                     .AddSwaggerGenNewtonsoftSupport();
+        }
+
+        private IMessagingBoard MockMessageBoard()
+        {
+            return new Mock<IMessagingBoard>(MockBehavior.Loose).Object;
         }
 
         /// <summary>
