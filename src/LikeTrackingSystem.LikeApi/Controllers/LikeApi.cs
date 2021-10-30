@@ -70,12 +70,12 @@ namespace LikeTrackingSystem.LikeApi.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(LikeInfo), description: "Information found")]
         [SwaggerResponse(statusCode: 400, type: typeof(InlineResponse400), description: "The parameters you provided are invalid")]
         [SwaggerResponse(statusCode: 404, type: typeof(string), description: "The resource you were trying to reach is not found")]
-        public virtual async Task<IActionResult> ArticleLikesInfo([FromRoute(Name = "article_id")][Required] Guid articleId, [FromHeader][Required()] Guid xUserId)
+        public virtual IActionResult ArticleLikesInfo([FromRoute(Name = "article_id")][Required] Guid articleId, [FromHeader][Required()] Guid xUserId)
         {
             try
             {
                 _log.WithArticle(articleId.ToString()).WithUser(xUserId.ToString()).Information("Get likes info");
-                var count = await _likeCounterService.GetLikesFor(articleId.ToString());
+                var count = _likeCounterService.GetLikesFor(articleId.ToString());
 
                 if (count is null)
                 {
@@ -83,7 +83,7 @@ namespace LikeTrackingSystem.LikeApi.Controllers
                     return NotFound($"No article found for {articleId}");
                 }
 
-                var userLikeInfoForArticle = await _likeTrackingService.HasUserLiked(articleId.ToString(), xUserId.ToString());
+                var userLikeInfoForArticle = _likeTrackingService.HasUserLiked(articleId.ToString(), xUserId.ToString());
 
                 if (userLikeInfoForArticle is null)
                 {

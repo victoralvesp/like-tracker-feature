@@ -24,6 +24,8 @@ using LikeTrackingSystem.LikeApi.Authentication;
 using LikeTrackingSystem.LikeApi.Filters;
 using LikeTrackingSystem.LikeApi.OpenApi;
 using LikeTrackingSystem.LikeApi.Formatters;
+using LikeTrackingSystem.LikeApi.Services;
+using LikeTrackingSystem.LikeApi.Options;
 
 namespace LikeTrackingSystem.LikeApi
 {
@@ -52,7 +54,13 @@ namespace LikeTrackingSystem.LikeApi
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions<TrackingServiceConfig>().Bind(Configuration.GetSection(TrackingServiceConfig.SECTION)).ValidateDataAnnotations();
+            services.AddOptions<CounterServiceConfig>().Bind(Configuration.GetSection(CounterServiceConfig.SECTION)).ValidateDataAnnotations();
             services
+                .AddScoped<ILikeCounterService, LikeCounterService>()
+                .AddScoped<ILikeTrackingService, LikeTrackingService>()
+                .AddScoped<IArticleLikingService, ArticleLikingService>()
+                
                 .AddControllers(options => {
                     options.InputFormatters.Insert(0, new InputFormatterStream());
                 })
@@ -64,6 +72,8 @@ namespace LikeTrackingSystem.LikeApi
                         NamingStrategy = new CamelCaseNamingStrategy()
                     });
                 });
+
+                
 
             services
                 .AddSwaggerGen(c =>

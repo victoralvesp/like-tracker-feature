@@ -24,6 +24,12 @@ using LikeTrackingSystem.LikeCounter.Authentication;
 using LikeTrackingSystem.LikeCounter.Filters;
 using LikeTrackingSystem.LikeCounter.OpenApi;
 using LikeTrackingSystem.LikeCounter.Formatters;
+using LikeTrackingSystem.LikeCounter.Counter;
+using LikeTrackingSystem.LikeCounter.Repository;
+using Moq;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace LikeTrackingSystem.LikeCounter
 {
@@ -55,8 +61,11 @@ namespace LikeTrackingSystem.LikeCounter
 
             // Add framework services.
             services
-                // Don't need the full MVC stack for an API, see https://andrewlock.net/comparing-startup-between-the-asp-net-core-3-templates/
-                .AddControllers(options => {
+                .AddScoped<ILikeCounter, SimpleLikeCounter>()
+                .AddSingleton<ILikeCountRepository>(MockLikeCountRepository)
+                .AddSingleton<ILikeEventRepository>(MockLikeEventRepository)
+                .AddControllers(options =>
+                {
                     options.InputFormatters.Insert(0, new InputFormatterStream());
                 })
                 .AddNewtonsoftJson(opts =>
@@ -96,8 +105,37 @@ namespace LikeTrackingSystem.LikeCounter
                     // Use [ValidateModelState] on Actions to actually validate it in C# as well!
                     c.OperationFilter<GeneratePathParamsValidationFilter>();
                 });
-                services
-                    .AddSwaggerGenNewtonsoftSupport();
+            services
+                .AddSwaggerGenNewtonsoftSupport();
+        }
+
+        private ILikeEventRepository MockLikeEventRepository(IServiceProvider services)
+        {
+            var mock = new Mock<ILikeEventRepository>();
+            var savedEvents = new ConcurrentDictionary<string, ArticleLikeEvent>();
+            mock.Setup(repo => repo.AddEvent(It.IsAny<ArticleLikeEvent>()))
+                .Returns<ArticleLikeEvent>((@event) =>
+                {
+                    var willSave = !savedEvents.ContainsKey(@event.EventHash);
+                    if (willSave)
+                        savedEvents.GetOrAdd(@event.EventHash, @event);
+                    return willSave;
+                });
+            return mock.Object;
+        }
+
+        private ILikeCountRepository MockLikeCountRepository(IServiceProvider services)
+        {
+             var mock = new Mock<ILikeCountRepository>();
+
+            var localCount = 0;
+            mock.Setup(x => x.LikeCount(It.IsAny<string>()))
+                .Returns<string>((_) => localCount);
+            mock.Setup(x => x.AtomicIncrement(It.IsAny<string>()))
+                .Callback<string>((_) => Interlocked.Add(ref localCount, 1))
+                .Returns<string>((_) => localCount);
+
+            return mock.Object;
         }
 
         /// <summary>

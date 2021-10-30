@@ -24,6 +24,12 @@ using LikeTrackingSystem.LikeTracker.Authentication;
 using LikeTrackingSystem.LikeTracker.Filters;
 using LikeTrackingSystem.LikeTracker.OpenApi;
 using LikeTrackingSystem.LikeTracker.Formatters;
+using LikeTrackingSystem.LikeTracker.Services;
+using LikeTrackingSystem.LikeTracker.Repository;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
+using Moq;
+using System.Linq;
 
 namespace LikeTrackingSystem.LikeTracker
 {
@@ -55,8 +61,10 @@ namespace LikeTrackingSystem.LikeTracker
 
             // Add framework services.
             services
-                // Don't need the full MVC stack for an API, see https://andrewlock.net/comparing-startup-between-the-asp-net-core-3-templates/
-                .AddControllers(options => {
+                .AddScoped<ITrackService, TrackService>()
+                .AddSingleton<IArticleLikeRepository>((serv) => InMemoryArticleLikeRepository())
+                .AddControllers(options =>
+                {
                     options.InputFormatters.Insert(0, new InputFormatterStream());
                 })
                 .AddNewtonsoftJson(opts =>
@@ -96,8 +104,38 @@ namespace LikeTrackingSystem.LikeTracker
                     // Use [ValidateModelState] on Actions to actually validate it in C# as well!
                     c.OperationFilter<GeneratePathParamsValidationFilter>();
                 });
-                services
-                    .AddSwaggerGenNewtonsoftSupport();
+            services
+                .AddSwaggerGenNewtonsoftSupport();
+        }
+
+        private IArticleLikeRepository InMemoryArticleLikeRepository()
+        {
+            var savedLikes = new ConcurrentDictionary<string, IEnumerable<LikeInfoDto>>();
+            var mock = new Mock<IArticleLikeRepository>();
+
+            mock.Setup(repo => repo.LikesFor(It.IsAny<string>()))
+                .Returns((string articleId) =>
+                {
+                    return savedLikes.GetValueOrDefault(articleId, Enumerable.Empty<LikeInfoDto>());
+                });
+
+            mock.Setup(repo => repo.AddUserLike(It.IsAny<string>(), It.IsAny<string>()))
+                .Callback((string articleId, string userId) =>
+                {
+                    savedLikes.AddOrUpdate(articleId, new[] { buildLikeInfo(userId) }, (key, oldValue) => oldValue.Append(buildLikeInfo(userId)));
+                });
+
+            return mock.Object;
+
+            LikeInfoDto buildLikeInfo(string userId, bool hasLiked = true)
+            {
+                return new LikeInfoDto
+                {
+                    UserId = userId,
+                    UpdateDate = DateTime.UtcNow,
+                    HasLiked = hasLiked
+                };
+            }
         }
 
         /// <summary>

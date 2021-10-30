@@ -35,6 +35,11 @@ namespace LikeTrackingSystem.LikeCounter.Controllers
 
         ILogBook _log;
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="LikeApiController"/> class.
+        /// </summary>
+        /// <param name="likeCounter"></param>
+        /// <param name="log"></param>
         public LikeApiController(ILikeCounter likeCounter, ILogBook? log = null)
         {
             _likeCounter = likeCounter;
