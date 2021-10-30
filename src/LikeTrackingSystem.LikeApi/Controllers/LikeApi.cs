@@ -19,17 +19,44 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Newtonsoft.Json;
 using LikeTrackingSystem.LikeApi.Attributes;
 using LikeTrackingSystem.LikeApi.Models;
+using LikeTrackingSystem.LikeApi.Services;
+using LikeTrackingSystem.Framework.Logging;
+using System.Threading.Tasks;
 
 namespace LikeTrackingSystem.LikeApi.Controllers
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
     [ApiController]
     public class LikeApiController : ControllerBase
-    { 
+    {
+
+        private readonly IArticleLikingService _articleLikingService;
+        private readonly ILikeCounterService _likeCounterService;
+
+        private readonly ILikeTrackingService _likeTrackingService;
+        private readonly ILogBook _log;
+
+
         /// <summary>
-        /// 
+        /// Creates a new instance of the <see cref="LikeApiController"/> class.
+        /// </summary>
+        /// <param name="articleLikingService"></param>
+        /// <param name="likeCounterService"></param>
+        /// <param name="likeTrackingService"></param>
+        /// <param name="logBook"></param>
+        public LikeApiController(IArticleLikingService articleLikingService, ILikeCounterService likeCounterService, ILikeTrackingService likeTrackingService, ILogBook? logBook = null)
+        {
+            _articleLikingService = articleLikingService;
+            _likeCounterService = likeCounterService;
+            _likeTrackingService = likeTrackingService;
+            _log = logBook ?? Log.Null;
+        }
+
+
+        /// <summary>
+        /// Gets like information for article
         /// </summary>
         /// <param name="articleId"></param>
         /// <param name="xUserId"></param>
@@ -43,27 +70,42 @@ namespace LikeTrackingSystem.LikeApi.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(LikeInfo), description: "Information found")]
         [SwaggerResponse(statusCode: 400, type: typeof(InlineResponse400), description: "The parameters you provided are invalid")]
         [SwaggerResponse(statusCode: 404, type: typeof(string), description: "The resource you were trying to reach is not found")]
-        public virtual IActionResult ArticleLikesInfo([FromRoute (Name = "article_id")][Required]Guid articleId, [FromHeader][Required()]Guid xUserId)
-        { 
+        public virtual async Task<IActionResult> ArticleLikesInfo([FromRoute(Name = "article_id")][Required] Guid articleId, [FromHeader][Required()] Guid xUserId)
+        {
+            try
+            {
+                _log.WithArticle(articleId.ToString()).WithUser(xUserId.ToString()).Information("Get likes info");
+                var count = await _likeCounterService.GetLikesFor(articleId.ToString());
 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(LikeInfo));
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(InlineResponse400));
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404, default(string));
-            string? exampleJson = null;
-            exampleJson = "{\r\n  \"user_liked_article\" : \"\",\r\n  \"like_count\" : 0\r\n}";
-            
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<LikeInfo>(exampleJson)
-            : default(LikeInfo);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
+                if (count is null)
+                {
+                    _log.Warning("Article not found");
+                    return NotFound($"No article found for {articleId}");
+                }
+
+                var userLikeInfoForArticle = await _likeTrackingService.HasUserLiked(articleId.ToString(), xUserId.ToString());
+
+                if (userLikeInfoForArticle is null)
+                {
+                    _log.Warning("User like info not found");
+                    return NotFound($"No user information found for user: {xUserId} and article: {articleId}");
+                }
+
+                return Ok(new LikeInfo
+                {
+                    UserLikedArticle = userLikeInfoForArticle,
+                    LikeCount = count.Value,
+                });
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error occurred when trying to like article", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         /// <summary>
-        /// 
+        /// Posts a new like for an article from a user
         /// </summary>
         /// <param name="articleId"></param>
         /// <param name="xUserId"></param>
@@ -77,23 +119,22 @@ namespace LikeTrackingSystem.LikeApi.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(LikeInfo), description: "Success")]
         [SwaggerResponse(statusCode: 400, type: typeof(InlineResponse400), description: "The parameters you provided are invalid")]
         [SwaggerResponse(statusCode: 404, type: typeof(string), description: "The resource you were trying to reach is not found")]
-        public virtual IActionResult LikeArticle([FromRoute (Name = "article_id")][Required]Guid articleId, [FromHeader][Required()]Guid xUserId)
-        { 
+        public virtual IActionResult LikeArticle([FromRoute(Name = "article_id")][Required] Guid articleId, [FromHeader][Required()] Guid xUserId)
+        {
 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(LikeInfo));
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(InlineResponse400));
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404, default(string));
-            string? exampleJson = null;
-            exampleJson = "{\r\n  \"user_liked_article\" : \"\",\r\n  \"like_count\" : 0\r\n}";
-            
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<LikeInfo>(exampleJson)
-            : default(LikeInfo);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
+            try
+            {
+                _log.WithArticle(articleId.ToString()).WithUser(xUserId.ToString()).Information("Posting new like info");
+
+                _articleLikingService.LikeArticle(articleId.ToString(), xUserId.ToString());
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error occurred when trying to get article like information", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

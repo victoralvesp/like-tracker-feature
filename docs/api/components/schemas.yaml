@@ -12,10 +12,7 @@ components:
       example: 'e7c8f0f0-e8e0-4e0e-b8b0-f8f8f8f8f8f8'
     user_liked_article:
       description: Whether the user liked the article
-      oneOf:
-        - $ref: '#/components/schemas/user_like_info'
-        - type: boolean
-          example: false
+      $ref: '#/components/schemas/user_like_info'
     user_like_info:
       type: object
       description: Information about the when the user liked the article
@@ -24,7 +21,10 @@ components:
           $ref: '#/components/schemas/article_id'
         user_id:
           $ref: '#/components/schemas/user_id'
-        like_date:
+        has_liked:
+          description: defines if the user has liked the article
+          type: boolean
+        last_update:
           type: string
           format: date-time
           description: Date when the user liked the article

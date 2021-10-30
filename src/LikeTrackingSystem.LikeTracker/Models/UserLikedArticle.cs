@@ -45,7 +45,14 @@ namespace LikeTrackingSystem.LikeTracker.Models
         /// </summary>
         /// <value>Date when the user liked the article</value>
         [DataMember(Name = "like_date", EmitDefaultValue = false)]
-        public DateTime LikeDate { get; set; }
+        public DateTime LastUpdate { get; set; }
+
+        /// <summary>
+        /// Defines if the user has liked the article
+        /// </summary>
+        /// <value></value>
+        [DataMember(Name = "has_liked", EmitDefaultValue = false)]
+        public bool HasLiked { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -57,7 +64,7 @@ namespace LikeTrackingSystem.LikeTracker.Models
             sb.Append("class UserLikedArticle {\n");
             sb.Append("  ArticleId: ").Append(ArticleId).Append("\n");
             sb.Append("  UserId: ").Append(UserId).Append("\n");
-            sb.Append("  LikeDate: ").Append(LikeDate).Append("\n");
+            sb.Append("  LikeDate: ").Append(LastUpdate).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -103,8 +110,8 @@ namespace LikeTrackingSystem.LikeTracker.Models
                     UserId.Equals(other.UserId)
                 ) &&
                 (
-                    LikeDate == other.LikeDate ||
-                    LikeDate.Equals(other.LikeDate)
+                    LastUpdate == other.LastUpdate ||
+                    LastUpdate.Equals(other.LastUpdate)
                 );
         }
 
@@ -119,7 +126,7 @@ namespace LikeTrackingSystem.LikeTracker.Models
                 var hashCode = 41;
                 hashCode = hashCode * 59 + ArticleId.GetHashCode();
                 hashCode = hashCode * 59 + UserId.GetHashCode();
-                hashCode = hashCode * 59 + LikeDate.GetHashCode();
+                hashCode = hashCode * 59 + LastUpdate.GetHashCode();
                 return hashCode;
             }
         }

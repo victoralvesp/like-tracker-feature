@@ -6,12 +6,18 @@ namespace LikeTrackingSystem.Framework.Logging
     {
         public const string LOG_ID = "log";
         public const string ARTICLE = "art";
+        public const string USER = "usr";
 
         public static ILogBook Null = new NullLog();
 
         public static ILogBook WithArticle(this ILogBook log, string articleId)
         {
             log.AddContext(ARTICLE, articleId);
+            return log;
+        }
+        public static ILogBook WithUser(this ILogBook log, string userId)
+        {
+            log.AddContext(USER, userId);
             return log;
         }
 

@@ -10,11 +10,19 @@ namespace LikeTrackingSystem.LikeCounter.Counter
     public interface ILikeCounter
     {
         /// <summary>
-        /// Number of likes for the article.
+        /// Increases the number of likes for the article.
         /// </summary>
         /// <param name="articleEvent">Article event</param>
         /// <returns>Current count of likes for article</returns>
-        int CountLikes(ArticleLikeEvent articleEvent);
+        int CountLike(ArticleLikeEvent articleEvent);
+
+        /// <summary>
+        /// Gets the number of likes for the article.
+        /// </summary>
+        /// <param name="articleId">Article's UUID</param>
+        /// <returns>Current count of likes for article</returns>
+        int? LikesFor(string articleId);
+
     }
 
     /// <inheritdoc />
@@ -28,6 +36,7 @@ namespace LikeTrackingSystem.LikeCounter.Counter
         /// </summary>
         /// <param name="likeRepository"></param>
         /// <param name="likeEventRepository"></param>
+        /// <param name="log"></param>
         public SimpleLikeCounter(ILikeCountRepository likeRepository, ILikeEventRepository likeEventRepository, ILogBook? log =null)
         {
             _likeEventRepository = likeEventRepository;
@@ -36,12 +45,13 @@ namespace LikeTrackingSystem.LikeCounter.Counter
         }
 
         /// <inheritdoc />
-        public int CountLikes(ArticleLikeEvent articleEvent)
+        public int CountLike(ArticleLikeEvent articleEvent)
         {
             _log.WithArticle(articleEvent.ArticleId)
                 .Information("Counting likes for article");
 
-            var likes = _likeRepository.LikeCount(articleEvent.ArticleId);
+            var likes = _likeRepository.LikeCount(articleEvent.ArticleId) ?? 0;
+            
             var eventAdded = _likeEventRepository.AddEvent(articleEvent);
             if (eventAdded)
             {
@@ -55,6 +65,17 @@ namespace LikeTrackingSystem.LikeCounter.Counter
                     _log.Error("Error ocurred when counting likes", ex);
                 }
             }
+
+            return likes;
+        }
+
+        /// <inheritdoc />
+        public int? LikesFor(string articleId)
+        {
+            _log.WithArticle(articleId)
+                .Information("Getting likes for article");
+
+            var likes = _likeRepository.LikeCount(articleId);
 
             return likes;
         }

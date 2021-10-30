@@ -22,7 +22,7 @@ namespace LikeTrackingSystem.LikeCounter.Tests.Counter
 
             //When a new like event arrives for id 19A41755
             var articleEvent = LikeEvent(articleId: "19A41755");
-            var articleLikes = likeCounter.CountLikes(articleEvent);
+            var articleLikes = likeCounter.CountLike(articleEvent);
 
             //Then the total number of likes for id 19A41755 should be 11
             articleLikes.Should().Be(11);
@@ -39,9 +39,9 @@ namespace LikeTrackingSystem.LikeCounter.Tests.Counter
 
             //When a new like event arrives for id 19A41755
             var articleEvent = LikeEvent(articleId: "19A41755");
-            _ = likeCounter.CountLikes(articleEvent);
+            _ = likeCounter.CountLike(articleEvent);
             // And we try to count the same event again
-            var articleLikes = likeCounter.CountLikes(articleEvent);
+            var articleLikes = likeCounter.CountLike(articleEvent);
 
             //Then the total number of likes for id 19A41755 should be 11
             articleLikes.Should().Be(11);

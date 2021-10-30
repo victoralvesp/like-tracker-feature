@@ -1,5 +1,8 @@
+using System;
+using System.Linq;
 using LikeTrackingSystem.Framework.Messaging;
 using LikeTrackingSystem.LikeTracker.Messaging;
+using LikeTrackingSystem.LikeTracker.Models;
 using LikeTrackingSystem.LikeTracker.Repository;
 
 namespace LikeTrackingSystem.LikeTracker.Services
@@ -15,6 +18,13 @@ namespace LikeTrackingSystem.LikeTracker.Services
         /// <param name="articleId">Article's UUID Identifier</param>
         /// <param name="userId">User's UUID Identifier</param>
         void UserLikedArticle(string articleId, string userId);
+
+        /// <summary>
+        /// Checks if user liked the article
+        /// </summary>
+        /// <param name="articleId">Article's UUID Identifier</param>
+        /// <param name="userId">User's UUID Identifier</param>
+        UserLikedArticle? GetLikeInfo(string articleId, string userId);
     }
 
     /// <inheritdoc/>
@@ -32,6 +42,27 @@ namespace LikeTrackingSystem.LikeTracker.Services
         {
             _likeRepository = likeRepository;
             _messagingBoard = messagingBoard;
+        }
+
+
+        /// <inheritdoc/>
+        public UserLikedArticle? GetLikeInfo(string articleId, string userId)
+        {
+            var userLikeInfo = _likeRepository.LikesFor(articleId).Where(info => info.UserId == userId).FirstOrDefault();
+
+            if (userLikeInfo is null)
+            {
+                return null;
+            }
+
+            return new()
+            {
+                UserId = Guid.Parse(userId),
+                ArticleId = Guid.Parse(articleId),
+                HasLiked = userLikeInfo.HasLiked,
+                LastUpdate = userLikeInfo.UpdateDate
+            };
+
         }
 
         /// <inheritdoc/>

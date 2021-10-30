@@ -9,7 +9,7 @@ namespace LikeTrackingSystem.LikeCounter.Repository
         /// Gets the like count for the specified article.
         /// </summary>
         /// <param name="articleId">Article's UUID </param>
-        int LikeCount(string articleId);
+        int? LikeCount(string articleId);
 
         /// <summary>
         /// 

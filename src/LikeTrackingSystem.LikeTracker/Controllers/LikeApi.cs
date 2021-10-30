@@ -19,6 +19,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Newtonsoft.Json;
 using LikeTrackingSystem.LikeTracker.Attributes;
 using LikeTrackingSystem.LikeTracker.Models;
+using LikeTrackingSystem.Framework.Logging;
+using LikeTrackingSystem.LikeTracker.Services;
+using System.Threading.Tasks;
 
 namespace LikeTrackingSystem.LikeTracker.Controllers
 { 
@@ -28,8 +31,26 @@ namespace LikeTrackingSystem.LikeTracker.Controllers
     [ApiController]
     public class LikeApiController : ControllerBase
     { 
+
+        
+        private readonly ITrackService _tracker;
+        private readonly ILogBook _log;
+
         /// <summary>
-        /// 
+        /// Creates a new instance of the <see cref="LikeApiController"/> class.
+        /// </summary>
+        /// <param name="tracker"></param>
+        /// <param name="log"></param>
+        public LikeApiController(ITrackService tracker, ILogBook? log = null)
+        {
+            _tracker = tracker;
+            _log = log ?? Log.Null;
+        }
+
+
+
+        /// <summary>
+        /// Gets user like information for article
         /// </summary>
         /// <param name="articleId"></param>
         /// <param name="userId"></param>
@@ -43,23 +64,27 @@ namespace LikeTrackingSystem.LikeTracker.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(UserLikedArticle), description: "User and article found")]
         [SwaggerResponse(statusCode: 400, type: typeof(InlineResponse400), description: "The parameters you provided are invalid")]
         [SwaggerResponse(statusCode: 404, type: typeof(string), description: "The resource you were trying to reach is not found")]
-        public virtual IActionResult UserLikedArticle([FromRoute (Name = "article_id")][Required]Guid articleId, [FromRoute (Name = "user_id")][Required]Guid userId)
-        { 
+        public virtual IActionResult UserLikedArticle([FromRoute(Name = "article_id")][Required] Guid articleId, [FromRoute(Name = "user_id")][Required] Guid userId)
+        {
 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(UserLikedArticle));
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(InlineResponse400));
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404, default(string));
-            string? exampleJson = null;
-            exampleJson = "null";
-            
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<UserLikedArticle>(exampleJson)
-            : default(UserLikedArticle);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
+            try
+            {
+                _log.WithArticle(articleId.ToString()).WithUser(userId.ToString()).Information("Get likes info");
+                var likeInfo = _tracker.GetLikeInfo(articleId.ToString(), userId.ToString());
+
+                if (likeInfo is null)
+                {
+                    _log.Warning("Article not found");
+                    return NotFound($"No article found for {articleId}");
+                }
+
+                return Ok(likeInfo);
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error occurred when trying to like article", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

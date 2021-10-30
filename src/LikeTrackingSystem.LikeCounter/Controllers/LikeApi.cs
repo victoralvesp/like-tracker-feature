@@ -19,6 +19,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Newtonsoft.Json;
 using LikeTrackingSystem.LikeCounter.Attributes;
 using LikeTrackingSystem.LikeCounter.Models;
+using LikeTrackingSystem.LikeCounter.Counter;
+using LikeTrackingSystem.Framework.Logging;
 
 namespace LikeTrackingSystem.LikeCounter.Controllers
 { 
@@ -27,9 +29,22 @@ namespace LikeTrackingSystem.LikeCounter.Controllers
     /// </summary>
     [ApiController]
     public class LikeApiController : ControllerBase
-    { 
+    {
+
+        ILikeCounter _likeCounter;
+
+        ILogBook _log;
+
+        public LikeApiController(ILikeCounter likeCounter, ILogBook? log = null)
+        {
+            _likeCounter = likeCounter;
+            _log = log ?? Log.Null;
+        }
+
+
+
         /// <summary>
-        /// 
+        /// Get likes for a article
         /// </summary>
         /// <param name="articleId"></param>
         /// <response code="200">Information found</response>
@@ -45,19 +60,24 @@ namespace LikeTrackingSystem.LikeCounter.Controllers
         public virtual IActionResult GetLikeCount([FromRoute (Name = "article_id")][Required]Guid articleId)
         { 
 
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(int));
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(InlineResponse400));
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404, default(string));
-            string? exampleJson = null;
-            
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<int>(exampleJson)
-            : default(int);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
+            try
+            {
+                _log.WithArticle(articleId.ToString()).Information("Get likes info");
+                var count = _likeCounter.LikesFor(articleId.ToString());
+
+                if (count is null)
+                {
+                    _log.Warning("Article not found");
+                    return NotFound($"No article found for {articleId}");
+                }
+
+                return Ok(count);
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Error occurred when trying to like article", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

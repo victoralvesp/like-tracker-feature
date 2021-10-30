@@ -6,3 +6,11 @@
 dotnet restore src/LikeTrackingSystem.LikeCounter/ && \
     dotnet build src/LikeTrackingSystem.LikeCounter/ && \
     echo "Now, run the following to start the project: dotnet run -p src/LikeTrackingSystem.LikeCounter/LikeTrackingSystem.LikeCounter.csproj --launch-profile web"
+
+dotnet restore src/LikeTrackingSystem.LikeTracker/ && \
+    dotnet build src/LikeTrackingSystem.LikeTracker/ && \
+    echo "Now, run the following to start the project: dotnet run -p src/LikeTrackingSystem.LikeTracker/LikeTrackingSystem.LikeCounter.csproj --launch-profile web"
+
+dotnet restore src/LikeTrackingSystem.LikeApi/ && \
+    dotnet build src/LikeTrackingSystem.LikeApi/ && \
+    echo "Now, run the following to start the project: dotnet run -p src/LikeTrackingSystem.LikeApi/LikeTrackingSystem.LikeCounter.csproj --launch-profile web"
