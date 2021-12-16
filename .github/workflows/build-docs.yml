@@ -1,0 +1,21 @@
+name: Build docs
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build docs
+      run: ./make.sh
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3 # https://github.com/peaceiris/actions-gh-pages
+      with:
+        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        publish_dir: .
+        force_orphan: true
+        exclude_assets: '.github,docs,.redocly.yaml,src,tests,LICENSE,README.md,make-doc-page.sh'
+        cname: liketracker.victoralvesp.github.io
